@@ -1,6 +1,5 @@
 package com.doongji.nestalk.entity.chat;
 
-import com.doongji.nestalk.entity.user.User;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -12,28 +11,23 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"user"})
+@ToString(exclude = {"room"})
 @Builder
 @Accessors(chain = true)
-public class Room {
+public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long room_id;
+    private Long chat_id;
 
-    private String name;
+    private String message;
 
     private LocalDateTime create_at;
 
     private LocalDateTime modified_at;
 
-    private String chatRoom_type;
-
     @ManyToOne
-    private User user;
+    private Room room;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "chat")
     private List<Participant> participantList;
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
-    private List<Chat> chatList;
 }

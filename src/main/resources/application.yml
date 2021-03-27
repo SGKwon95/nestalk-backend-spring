@@ -33,5 +33,5 @@ jwt:
   token:
     header: x-access-token
     issuer: nestalk
-    secret:
+    secret: ksg
     expirationTime: 0
