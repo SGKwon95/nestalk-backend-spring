@@ -1,33 +1,32 @@
 package com.doongji.nestalk.entity.chat;
 
+import com.doongji.nestalk.entity.BaseTimeEntity;
 import lombok.*;
-import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(exclude = {"room"})
 @Builder
-@Accessors(chain = true)
-public class Chat {
+public class Chat extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chat_id;
 
     private String message;
 
+    @CreatedDate
     private LocalDateTime create_at;
 
+    @LastModifiedDate
     private LocalDateTime modified_at;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Join
     private Room room;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "chat")
-    private List<Participant> participantList;
 }
