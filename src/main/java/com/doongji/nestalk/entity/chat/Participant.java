@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(exclude = {"room","chat"})
 @Builder
 public class Participant extends BaseTimeEntity {
@@ -23,9 +24,11 @@ public class Participant extends BaseTimeEntity {
     @LastModifiedDate
     private LocalDateTime modified_at;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_id")
     private Chat chat;
 }

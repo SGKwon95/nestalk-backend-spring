@@ -12,6 +12,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(exclude = {"user"})
 @Builder
 public class Room extends BaseTimeEntity {
@@ -29,7 +30,8 @@ public class Room extends BaseTimeEntity {
 
     private String chatRoom_type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")

@@ -6,10 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room,Long> {
-    List<User> findByUser(User user);
-    Optional<List<Room>> findByIdIn(Long userId);
+    List<Room> findByUser(User user);
 }

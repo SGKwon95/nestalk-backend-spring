@@ -3,6 +3,7 @@ package com.doongji.nestalk.controller.v1.chat;
 import com.doongji.nestalk.entity.chat.Room;
 import com.doongji.nestalk.error.NotFoundException;
 import com.doongji.nestalk.repository.user.RoomRepository;
+import com.doongji.nestalk.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ChattingRoomController {
 
     private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/api/chat/lookup/all")
     public List<Room> lookupChattingRoomAll() {
@@ -33,7 +35,8 @@ public class ChattingRoomController {
     @GetMapping("/api/chat/lookup/{id}")
     public List<Room> lookupChattingRoomByUserId(@PathVariable Long userId) {
 
-        return roomRepository.findByIdIn(userId)
+        return userRepository.findById(userId)
+                .map(user -> roomRepository.findByUser(user))
                 .orElseThrow(()->new NotFoundException("조회한 유저의 채팅이 없습니다"));
     }
 }
