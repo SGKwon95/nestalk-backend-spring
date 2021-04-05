@@ -11,27 +11,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(exclude = {"user"})
 @Builder
 public class Room extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long room_id;
+    private Long roomId;
 
     private String name;
 
     @CreatedDate
-    private LocalDateTime create_at;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
-    private LocalDateTime modified_at;
+    private LocalDateTime modifiedAt;
 
-    private String chatRoom_type;
+    private String chatRoomType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
@@ -39,4 +39,11 @@ public class Room extends BaseTimeEntity {
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
     private List<Chat> chatList;
+
+    public Room(Long roomId, String name, String chatRoomType) {
+        this.roomId = roomId;
+        this.name = name;
+        this.chatRoomType = chatRoomType;
+    }
+
 }

@@ -10,19 +10,18 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(exclude = {"room","chat"})
 @Builder
 public class Participant extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long participant_id;
+    private Long participantId;
 
     @CreatedDate
-    private LocalDateTime create_at;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
-    private LocalDateTime modified_at;
+    private LocalDateTime modifiedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
@@ -31,4 +30,9 @@ public class Participant extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id")
     private Chat chat;
+
+    public Participant(Long participantId) {
+        this.participantId = participantId;
+    }
+
 }
