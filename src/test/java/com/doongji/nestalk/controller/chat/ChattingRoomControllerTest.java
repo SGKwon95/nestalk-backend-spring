@@ -41,12 +41,12 @@ public class ChattingRoomControllerTest {
     @Transactional
     public void lookupChattingRoom() throws Exception {
 
-        roomRepository.save(Room.builder().room_id(1L).name("First Room").create_at(LocalDateTime.now()).modified_at(null).chatRoom_type("A").build());
-        roomRepository.save(Room.builder().room_id(2L).name("Second Room").create_at(LocalDateTime.now()).modified_at(null).chatRoom_type("A").build());
-        chatRepository.save(Chat.builder().chat_id(1L).message("ㅎㅇ").create_at(LocalDateTime.now()).modified_at(null).build());
-        chatRepository.save(Chat.builder().chat_id(2L).message("ㅇㅇ").create_at(LocalDateTime.now()).modified_at(null).build());
-        participantRepository.save(Participant.builder().participant_id(1L).create_at(LocalDateTime.now()).modified_at(null).build());
-        participantRepository.save(Participant.builder().participant_id(2L).create_at(LocalDateTime.now()).modified_at(null).build());
+        roomRepository.save(Room.builder().roomId(1L).name("First Room").createAt(LocalDateTime.now()).modifiedAt(null).chatRoomType("A").build());
+        roomRepository.save(Room.builder().roomId(2L).name("Second Room").createAt(LocalDateTime.now()).modifiedAt(null).chatRoomType("A").build());
+        chatRepository.save(Chat.builder().chatId(1L).message("ㅎㅇ").createAt(LocalDateTime.now()).modifiedAt(null).build());
+        chatRepository.save(Chat.builder().chatId(2L).message("ㅇㅇ").createAt(LocalDateTime.now()).modifiedAt(null).build());
+        participantRepository.save(Participant.builder().participantId(1L).createAt(LocalDateTime.now()).modifiedAt(null).build());
+        participantRepository.save(Participant.builder().participantId(2L).createAt(LocalDateTime.now()).modifiedAt(null).build());
 
 
         this.mockMvc.perform(MockMvcRequestBuilders
