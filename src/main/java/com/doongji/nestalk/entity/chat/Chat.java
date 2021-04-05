@@ -10,24 +10,28 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(exclude = {"room"})
 @Builder
 public class Chat extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chat_id;
+    private Long chatId;
 
     private String message;
 
     @CreatedDate
-    private LocalDateTime create_at;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
-    private LocalDateTime modified_at;
+    private LocalDateTime modifiedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
+
+    public Chat(Long chatId, String message) {
+        this.chatId = chatId;
+        this.message = message;
+    }
 
 }
