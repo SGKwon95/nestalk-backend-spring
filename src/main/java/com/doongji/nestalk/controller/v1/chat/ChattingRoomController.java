@@ -2,6 +2,7 @@ package com.doongji.nestalk.controller.v1.chat;
 
 import com.doongji.nestalk.entity.chat.Room;
 import com.doongji.nestalk.error.NotFoundException;
+import com.doongji.nestalk.repository.user.ProfileRepository;
 import com.doongji.nestalk.repository.user.RoomRepository;
 import com.doongji.nestalk.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class ChattingRoomController {
 
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     @GetMapping("/api/chat/lookup/all")
     public List<Room> lookupChattingRoomAll() {
@@ -38,5 +41,16 @@ public class ChattingRoomController {
         return userRepository.findById(userId)
                 .map(user -> roomRepository.findByUser(user))
                 .orElseThrow(()->new NotFoundException("조회한 유저의 채팅이 없습니다"));
+    }
+
+    @GetMapping("/api/chat/lookup/profile/image")
+    public List<String> lookupChattingRoomAndProfileImage(@PathVariable Long userId) {
+
+        List<Long> userIdList = new ArrayList<>();
+        roomRepository.findAll().forEach(room-> userIdList.add(room.getUser().getUserId()));
+        List<String> imageUrlList = new ArrayList<>();
+        profileRepository.findByUserIdIn(userIdList).stream()
+                .map(profile -> imageUrlList.add(profile.getImageUrl()));
+        return imageUrlList;
     }
 }
