@@ -1,6 +1,8 @@
 package com.doongji.nestalk.controller.v1.chat;
 
+import com.doongji.nestalk.controller.v1.chat.dto.RoomDto;
 import com.doongji.nestalk.entity.chat.Room;
+import com.doongji.nestalk.entity.user.User;
 import com.doongji.nestalk.error.NotFoundException;
 import com.doongji.nestalk.repository.user.ProfileRepository;
 import com.doongji.nestalk.repository.user.RoomRepository;
@@ -13,8 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,33 +26,26 @@ public class ChattingRoomController {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
-    @GetMapping("/api/chat/lookup/all")
-    public List<Room> lookupChattingRoomAll() {
-
-        return roomRepository.findAll();
-    }
-
     @ExceptionHandler
     public ResponseEntity<String> NotFoundExceptionHandler(NotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
     }
 
     @GetMapping("/api/chat/lookup/{id}")
-    public List<Room> lookupChattingRoomByUserId(@PathVariable Long userId) {
+    public List<RoomDto> lookupMyChattingRoom(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("해당 유저가 존재하지 않습니다"));
 
-        return userRepository.findById(userId)
-                .map(user -> roomRepository.findByUser(user))
-                .orElseThrow(()->new NotFoundException("조회한 유저의 채팅이 없습니다"));
+        return roomRepository.findByUser(user).stream()
+                .map(room -> new RoomDto(room.getName(),getProfileImageOfParticipants(room)))
+                .collect(Collectors.toList());
     }
 
-    @GetMapping("/api/chat/lookup/profile/image")
-    public List<String> lookupChattingRoomAndProfileImage(@PathVariable Long userId) {
+    private List<String> getProfileImageOfParticipants(Room room) {
 
-        List<Long> userIdList = new ArrayList<>();
-        roomRepository.findAll().forEach(room-> userIdList.add(room.getUser().getUserId()));
-        List<String> imageUrlList = new ArrayList<>();
-        profileRepository.findByUserIdIn(userIdList).stream()
-                .map(profile -> imageUrlList.add(profile.getImageUrl()));
-        return imageUrlList;
+        return room.getParticipantList().stream()
+                .map(participant -> userRepository.findById(participant.getParticipantId()).get())
+                .map(user -> profileRepository.findByUser(user).get().getImageUrl())
+                .collect(Collectors.toList());
     }
 }
