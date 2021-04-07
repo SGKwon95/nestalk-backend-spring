@@ -1,16 +1,12 @@
 package com.doongji.nestalk.entity.user;
 
 import com.doongji.nestalk.entity.BaseTimeEntity;
-import com.doongji.nestalk.entity.chat.Room;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,13 +24,7 @@ public class Profile extends BaseTimeEntity{
 
     private String backgroundUrl;
 
-    @CreatedDate
-    private LocalDateTime createAt;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
-
-    @OneToOne(mappedBy = "profile")
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "profile")
     private User user;
 
     public Profile(Long profileId, String stateMessage, String imageUrl, String backgroundUrl) {

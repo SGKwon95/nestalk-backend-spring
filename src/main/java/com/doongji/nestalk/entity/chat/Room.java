@@ -22,12 +22,6 @@ public class Room extends BaseTimeEntity {
 
     private String name;
 
-    @CreatedDate
-    private LocalDateTime createAt;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
-
     private String chatRoomType;
 
     @ManyToOne(fetch = FetchType.LAZY)
