@@ -40,14 +40,14 @@ public class ChattingRoomControllerTest {
     @Test
     @Transactional
     public void lookupChattingRoom() throws Exception {
-
+/*
         roomRepository.save(Room.builder().roomId(1L).name("First Room").createAt(LocalDateTime.now()).modifiedAt(null).chatRoomType("A").build());
         roomRepository.save(Room.builder().roomId(2L).name("Second Room").createAt(LocalDateTime.now()).modifiedAt(null).chatRoomType("A").build());
         chatRepository.save(Chat.builder().chatId(1L).message("ㅎㅇ").createAt(LocalDateTime.now()).modifiedAt(null).build());
         chatRepository.save(Chat.builder().chatId(2L).message("ㅇㅇ").createAt(LocalDateTime.now()).modifiedAt(null).build());
         participantRepository.save(Participant.builder().participantId(1L).createAt(LocalDateTime.now()).modifiedAt(null).build());
         participantRepository.save(Participant.builder().participantId(2L).createAt(LocalDateTime.now()).modifiedAt(null).build());
-
+*/
 
         this.mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/chat/lookup")
