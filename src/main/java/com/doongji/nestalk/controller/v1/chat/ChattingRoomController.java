@@ -1,51 +1,32 @@
 package com.doongji.nestalk.controller.v1.chat;
 
 import com.doongji.nestalk.controller.v1.chat.dto.RoomDto;
-import com.doongji.nestalk.entity.chat.Room;
-import com.doongji.nestalk.entity.user.User;
-import com.doongji.nestalk.error.NotFoundException;
-import com.doongji.nestalk.repository.user.ProfileRepository;
-import com.doongji.nestalk.repository.user.RoomRepository;
-import com.doongji.nestalk.repository.user.UserRepository;
+import com.doongji.nestalk.security.JwtAuthentication;
+import com.doongji.nestalk.service.chat.ChatService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Api(tags = "채팅방 조회 APIs")
 @RequiredArgsConstructor
 @RestController
 public class ChattingRoomController {
 
-    private final RoomRepository roomRepository;
-    private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
+    private final ChatService chatService;
 
-    @ExceptionHandler
-    public ResponseEntity<String> NotFoundExceptionHandler(NotFoundException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
-    }
-
-    @GetMapping("/api/chat/lookup/{id}")
-    public List<RoomDto> lookupMyChattingRoom(@PathVariable Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("해당 유저가 존재하지 않습니다"));
-
-        return roomRepository.findByUser(user).stream()
-                .map(room -> new RoomDto(room.getName(),getProfileImageOfParticipants(room)))
-                .collect(Collectors.toList());
-    }
-
-    private List<String> getProfileImageOfParticipants(Room room) {
-
-        return room.getParticipantList().stream()
-                .map(participant -> userRepository.findById(participant.getParticipantId()).get())
-                .map(user -> profileRepository.findByUser(user).get().getImageUrl())
-                .collect(Collectors.toList());
+    @ApiOperation(value = "내가 참여중인 모든 채팅방 조회")
+    @GetMapping("/api/chat/lookup")
+    public ResponseEntity<List<RoomDto>> lookupMyChattingRoom(
+            @AuthenticationPrincipal JwtAuthentication jwt
+    ) {
+        return ResponseEntity.ok(
+            chatService.lookupMyChattingRoom(jwt.userId)
+        );
     }
 }
